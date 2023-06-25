@@ -2,10 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { UserCreateInput } from './input/create.input';
 import { UserRepository } from '../repositories/user.repository';
 import { CreateUserType } from './type/create.type';
-import { LoginInput } from './input/login.input';
-import { LoginOutput } from './type/login.type';
-import { GoogleLoginInput } from './input/google.input';
-import { UserLoginType, UserRole } from '../repositories/entities/user.entity';
+import { LoginInput } from '../auth/input/login.input';
+import { LoginOutput } from '../auth/type/login.type';
+import { GoogleLoginInput } from '../auth/input/google.input';
+import {
+  UserEntity,
+  UserLoginType,
+  UserRole,
+} from '../repositories/entities/user.entity';
 
 @Injectable()
 export class UserService {
@@ -21,48 +25,7 @@ export class UserService {
     return { ok: true };
   }
 
-  async loginUser(loginInput: LoginInput): Promise<LoginOutput> {
-    const { userId, password } = loginInput;
-    // 유저 유무 체크
-    const user = await this.userCheckService(userId);
-    if (!user) {
-      return {
-        ok: false,
-        error: '유저 정보가 없습니다.',
-      };
-    }
-    //
-    const passwordCorrect = await user.checkPassword(password);
-    if (!passwordCorrect) {
-      return {
-        ok: false,
-        error: '비밀번호가 틀렸습니다.',
-      };
-    }
-    return {
-      ok: true,
-      error: '',
-      token: 'asdfasf',
-    };
-    /*
-    // JWT 생성
-    try {
-      const token = this.jwtService.sign(user.userId);
-      return {
-        ok: true,
-        token: token,
-      };
-    } catch (error) {
-      return {
-        ok: false,
-        error,
-      };
-    }
-
-     */
-  }
-
-  async userCheckService(userId: string): Promise<any> {
+  async userCheckService(userId: string): Promise<UserEntity> {
     const checkId = await this.userRepository.findUserAsId(userId);
     return checkId;
   }

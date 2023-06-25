@@ -5,13 +5,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserRepository } from '../repositories/user.repository';
 import { UserEntity } from '../repositories/entities/user.entity';
 import { VerificationEntity } from '../repositories/entities/verification.entity';
-import { UserController } from './user.controller';
-import { GoogleStrategy } from './strategy/google.strategy';
+import { JwtAccessStrategy } from '../auth/strategies/jwt-access.strategy';
 
 @Module({
   imports: [TypeOrmModule.forFeature([UserEntity, VerificationEntity])],
-  providers: [UserResolver, UserService, UserRepository, GoogleStrategy],
-  exports: [TypeOrmModule],
-  controllers: [UserController],
+  providers: [UserResolver, UserService, UserRepository],
+  exports: [TypeOrmModule, UserService, UserRepository],
 })
 export class UserModule {}

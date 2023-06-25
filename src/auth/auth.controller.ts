@@ -1,19 +1,19 @@
 import { Controller, Get, Req, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { UserService } from './user.service';
 import { IOGoogleAuthUser } from './interface/social.interface';
-import { LoginOutput } from './type/login.type';
+import { LoginOutput } from '../auth/type/login.type';
+import { AuthService } from './auth.service';
 
 @Controller('login')
-export class UserController {
-  constructor(private readonly userService: UserService) {}
+export class AuthController {
+  constructor(private readonly authService: AuthService) {}
 
   @UseGuards(AuthGuard('google'))
   @Get('google')
   async googleLogin(
     @Req() req: Request & IOGoogleAuthUser,
   ): Promise<LoginOutput> {
-    const result = await this.userService.googleLogin(req);
+    const result = await this.authService.googleLogin(req);
     return result;
   }
 }

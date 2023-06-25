@@ -3,13 +3,20 @@ import { UserEntity } from '../repositories/entities/user.entity';
 import { UserService } from './user.service';
 import { UserCreateInput } from './input/create.input';
 import { CreateUserType } from './type/create.type';
-import { LoginOutput } from './type/login.type';
-import { LoginInput } from './input/login.input';
-import { GoogleLoginInput } from './input/google.input';
+import { UseGuards } from '@nestjs/common';
+import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
+import { IContext } from '../common/interface/req.interface';
 
 @Resolver(() => UserEntity)
 export class UserResolver {
   constructor(private readonly userService: UserService) {}
+
+  @UseGuards(GqlAuthGuard('localLogin'))
+  @Query(() => String)
+  fetchUser(@Context() ctx: IContext): string {
+    return '인가에 성공했습니다.';
+  }
+
   // 1. 유저 리스트
   @Query((returns) => UserEntity)
   async userList() {
@@ -28,15 +35,6 @@ export class UserResolver {
     @Args('userCreateInput') userCreateInput: UserCreateInput,
   ): Promise<CreateUserType> {
     const result = await this.userService.createUser(userCreateInput);
-    return result;
-  }
-
-  // 4. 로그인
-  @Mutation(() => LoginOutput)
-  async loginUser(
-    @Args('loginInput') loginInput: LoginInput,
-  ): Promise<LoginOutput> {
-    const result = await this.userService.loginUser(loginInput);
     return result;
   }
 }

@@ -7,10 +7,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
 import { UserEntity } from './repositories/entities/user.entity';
 import { VerificationEntity } from './repositories/entities/verification.entity';
-import { GoogleStrategy } from './user/strategy/google.strategy';
+import { GoogleStrategy } from './auth/strategies/google.strategy';
 import { GymModule } from './gym/gym.module';
 import * as process from 'process';
 import { GymEntity } from './repositories/entities/gym.entity';
+import { AuthResolver } from './auth/auth.resolver';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -42,13 +44,18 @@ import { GymEntity } from './repositories/entities/gym.entity';
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: true,
-      context: ({ req }) => ({ user: req['user'] }),
+      // 여기의 context는 @Context의 context.req, context.res 를 의미한다.
+      context: ({ req, res }) => ({
+        req,
+        res,
+      }),
     }),
     UserModule,
     GymModule,
+    AuthModule,
   ],
 
   controllers: [],
-  providers: [GoogleStrategy],
+  providers: [GoogleStrategy, AuthResolver],
 })
 export class AppModule {}
