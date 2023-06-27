@@ -19,11 +19,11 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     refreshToken: string,
     profile: Profile,
   ): IOGoogleAuthUser {
+    console.log(profile);
     return {
       name: profile.displayName,
       email: profile.emails[0].value,
       hashedPassword: 'sadfsadf',
-      age: 0,
       accessToken: accessToken,
       refreshToken: refreshToken,
     };

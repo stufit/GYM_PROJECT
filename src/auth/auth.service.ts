@@ -3,11 +3,7 @@ import { LoginInput } from './input/login.input';
 import { LoginOutput } from './type/login.type';
 import { UserService } from '../user/user.service';
 import { UserCreateInput } from '../user/input/create.input';
-import {
-  UserEntity,
-  UserLoginType,
-  UserRole,
-} from '../repositories/entities/user.entity';
+import { UserLoginType, UserRole } from '../repositories/entities/user.entity';
 import { UserRepository } from '../repositories/user.repository';
 import { JwtService } from '@nestjs/jwt';
 
@@ -42,7 +38,12 @@ export class AuthService {
     await this.setRefreshToken(checkUser, ctx);
     // 5. JWT 생성(비번과 아이디 모두 맞는 경우)
     const getAccessToken = await this.getAccessToken(checkUser);
-    return { ok: true, error: '', token: getAccessToken };
+    return {
+      ok: true,
+      error: '',
+      accessToken: getAccessToken,
+      refreshToken: ctx.res.req.cookies.refreshToken,
+    };
   }
 
   // 2. 구글 로그인 서비스
@@ -59,24 +60,36 @@ export class AuthService {
     if (!userInfo) {
       await this.userRepository.createUser(createUserInfo);
     }
-    return { ok: true, error: '', token: req.user.accessToken };
+    // 4. 리프레시 토큰 만든 후 브라우저 쿠키에 저장
+    const refreshToken = await this.setRefreshToken(userInfo, req);
+    return {
+      ok: true,
+      error: '',
+      accessToken: req.user.accessToken,
+      refreshToken: refreshToken,
+    };
   }
 
-  async getAccessToken(user): Promise<any> {
+  async getAccessToken(user) {
     // 첫번째는 내가 넣고싶은 payload, 두번째는 secret key
     return this.jwtService.sign(
       {
         userId: user.userId,
-        email: user.userEmail,
+        email: user.email,
         name: user.name,
       },
-      { secret: process.env.JWT_SECRET, expiresIn: '20s' },
+      { secret: process.env.JWT_SECRET, expiresIn: '1h' },
     );
   }
 
   async setRefreshToken(checkUser, ctx) {
+    console.log(checkUser);
     const refreshToken = this.jwtService.sign(
-      { userId: checkUser.userId },
+      {
+        userId: checkUser.userId,
+        email: checkUser.userEmail,
+        name: checkUser.name,
+      },
       { secret: process.env.JWT_REFRESH_TOKEN, expiresIn: '2w' },
     );
     // 개발환경
@@ -92,7 +105,7 @@ export class AuthService {
     return refreshToken;
   }
 
-  async restoreAccessToken(req): Promise<any> {
-    return this.getAccessToken(req);
+  async restoreAccessToken(req) {
+    return this.getAccessToken(req.user);
   }
 }

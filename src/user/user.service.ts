@@ -34,21 +34,4 @@ export class UserService {
     const checkEmail = await this.userRepository.findUserAsEmail(email);
     return checkEmail;
   }
-
-  async googleLogin(req: any): Promise<LoginOutput> {
-    const createUserInfo: UserCreateInput = {
-      name: req.user.name,
-      userId: req.user.email,
-      password: req.user.hashedPassword,
-      userEmail: req.user.email,
-      role: UserRole.User,
-      loginType: UserLoginType.Google,
-    };
-    console.log(req.user);
-    const userInfo = await this.userRepository.findUserAsEmail(req.user.email);
-    if (!userInfo) {
-      await this.userRepository.createUser(createUserInfo);
-    }
-    return { ok: true, error: '', token: req.user.accessToken };
-  }
 }

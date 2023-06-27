@@ -1,4 +1,4 @@
-import {Field, ObjectType} from "@nestjs/graphql";
+import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
 export class LoginOutput {
@@ -8,5 +8,8 @@ export class LoginOutput {
   @Field((type) => Boolean)
   ok: boolean;
   @Field((type) => String, { nullable: true })
-  token?: string;
+  accessToken?: string;
+
+  @Field((type) => String, { nullable: true })
+  refreshToken?: string;
 }

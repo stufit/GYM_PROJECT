@@ -19,10 +19,10 @@ export class JwtAccessStrategy extends PassportStrategy(
   }
 
   validate(payload: any) {
-    console.log('크아앙');
+    console.log('로그인 페이로드', payload);
     return {
       userId: payload.userId,
-      username: payload.name,
+      name: payload.name,
       email: payload.email,
     };
   }
