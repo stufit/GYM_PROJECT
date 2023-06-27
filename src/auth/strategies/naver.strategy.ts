@@ -1,17 +1,17 @@
 import { PassportStrategy } from '@nestjs/passport';
-import { Profile, Strategy } from 'passport-google-oauth20';
+import { Profile, Strategy } from 'passport-naver-v2';
 import { ConfigService } from '@nestjs/config';
 import { IOGoogleAuthUser } from '../../interface/social.interface';
 import { Injectable } from '@nestjs/common';
 import * as process from 'process';
 @Injectable()
-export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
+export class NaverStrategy extends PassportStrategy(Strategy, 'naver') {
   constructor(private readonly configService: ConfigService) {
     super({
-      clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: configService.get<string>('GOOGLE_CLIENT_SECRET'),
-      callbackURL: configService.get<string>('GOOGLE_CALLBACK_URL'),
-      scope: ['email', 'profile'],
+      clientID: 'NS7wJJSStdrujZIv6bu2',
+      clientSecret: '7uDRXb3xLI',
+      callbackURL: 'http://localhost:3010/login/naver',
+      scope: ['email', 'name', 'birthyear', 'mobile'],
     });
   }
   validate(
@@ -19,10 +19,9 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     refreshToken: string,
     profile: Profile,
   ): IOGoogleAuthUser {
-    console.log('프로필:', profile);
     return {
-      name: profile.displayName,
-      email: profile.emails[0].value,
+      name: profile.name,
+      email: profile.email,
       hashedPassword: 'sadfsadf',
       provider: profile.provider,
       accessToken: accessToken,

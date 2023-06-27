@@ -36,6 +36,7 @@ export class UserRepository {
     const user = await this.userRepository.save(
       this.userRepository.create(userCreateInput),
     );
-    return await this.verification.save(this.verification.create({ user }));
+    await this.verification.save(this.verification.create({ user }));
+    return user;
   }
 }

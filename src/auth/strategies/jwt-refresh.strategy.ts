@@ -20,7 +20,6 @@ export class JwtRefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
   }
 
   validate(payload) {
-    console.log('리프레시페이로드', payload); // { sub: asdkljfkdj(유저ID) }
     return {
       userId: payload.userId,
       name: payload.name,

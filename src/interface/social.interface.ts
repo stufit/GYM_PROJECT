@@ -4,6 +4,7 @@ export interface IOGoogleAuthUser {
   hashedPassword: string;
   accessToken: string;
   refreshToken: string;
+  provider: string;
 }
 
 export interface ILocalAuthUser {

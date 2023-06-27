@@ -7,6 +7,7 @@ import { UserModule } from '../user/user.module';
 import { GoogleStrategy } from './strategies/google.strategy';
 import { JwtAccessStrategy } from './strategies/jwt-access.strategy';
 import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
+import { NaverStrategy } from './strategies/naver.strategy';
 
 @Module({
   imports: [JwtModule.register({}), UserModule],
@@ -16,6 +17,7 @@ import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
     GoogleStrategy,
     JwtAccessStrategy,
     JwtRefreshStrategy,
+    NaverStrategy,
   ],
   controllers: [AuthController],
   exports: [AuthService],

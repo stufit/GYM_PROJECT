@@ -1,4 +1,4 @@
-import { ILocalAuthUser } from '../../auth/interface/social.interface';
+import { ILocalAuthUser } from '../../interface/social.interface';
 
 export interface IContext {
   req: Request & ILocalAuthUser;

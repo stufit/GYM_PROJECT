@@ -35,7 +35,7 @@ export class AuthService {
       };
     }
     // 4. 리프레시 토큰 만든 후 브라우저 쿠키에 저장
-    await this.setRefreshToken(checkUser, ctx);
+    await this.setRefreshToken(checkUser, ctx.res);
     // 5. JWT 생성(비번과 아이디 모두 맞는 경우)
     const getAccessToken = await this.getAccessToken(checkUser);
     return {
@@ -47,21 +47,28 @@ export class AuthService {
   }
 
   // 2. 구글 로그인 서비스
-  async googleLogin(req: any): Promise<LoginOutput> {
+  async socialLogin(req, res): Promise<LoginOutput> {
+    console.log(req.user);
     const createUserInfo: UserCreateInput = {
       name: req.user.name,
       userId: req.user.email,
       password: req.user.hashedPassword,
       userEmail: req.user.email,
       role: UserRole.User,
-      loginType: UserLoginType.Google,
+      loginType:
+        req.user.provider === 'google'
+          ? UserLoginType.Google
+          : req.user.provider === 'kakao'
+          ? UserLoginType.Kakao
+          : UserLoginType.Naver,
     };
-    const userInfo = await this.userRepository.findUserAsEmail(req.user.email);
+    let userInfo = await this.userRepository.findUserAsEmail(req.user.email);
     if (!userInfo) {
-      await this.userRepository.createUser(createUserInfo);
+      userInfo = await this.userRepository.createUser(createUserInfo);
     }
-    // 4. 리프레시 토큰 만든 후 브라우저 쿠키에 저장
-    const refreshToken = await this.setRefreshToken(userInfo, req);
+    // 회원인 경우, 리프레시 토큰 만든 후 브라우저 쿠키에 저장
+    const refreshToken = await this.setRefreshToken(userInfo, res);
+    res.redirect('http://localhost:8080/social-login.html');
     return {
       ok: true,
       error: '',
@@ -82,8 +89,8 @@ export class AuthService {
     );
   }
 
-  async setRefreshToken(checkUser, ctx) {
-    console.log(checkUser);
+  async setRefreshToken(checkUser, res) {
+    console.log('체크유져;', checkUser);
     const refreshToken = this.jwtService.sign(
       {
         userId: checkUser.userId,
@@ -92,8 +99,9 @@ export class AuthService {
       },
       { secret: process.env.JWT_REFRESH_TOKEN, expiresIn: '2w' },
     );
+    console.log(refreshToken);
     // 개발환경
-    ctx.res.setHeader('Set-Cookie', `refreshToken=${refreshToken}; path=/; `);
+    res.setHeader('Set-Cookie', `refreshToken=${refreshToken}; path=/; `);
     // 배포환경
     /*
     ctx.res.headers.setHeader(
