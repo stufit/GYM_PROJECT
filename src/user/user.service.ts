@@ -2,14 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { UserCreateInput } from './input/create.input';
 import { UserRepository } from '../repositories/user.repository';
 import { CreateUserType } from './type/create.type';
-import { LoginInput } from '../auth/input/login.input';
-import { LoginOutput } from '../auth/type/login.type';
-import { GoogleLoginInput } from '../auth/input/google.input';
-import {
-  UserEntity,
-  UserLoginType,
-  UserRole,
-} from '../repositories/entities/user.entity';
+
+import { UserEntity } from '../repositories/entities/user.entity';
 
 @Injectable()
 export class UserService {

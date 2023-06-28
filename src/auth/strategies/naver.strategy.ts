@@ -8,9 +8,9 @@ import * as process from 'process';
 export class NaverStrategy extends PassportStrategy(Strategy, 'naver') {
   constructor(private readonly configService: ConfigService) {
     super({
-      clientID: 'NS7wJJSStdrujZIv6bu2',
-      clientSecret: '7uDRXb3xLI',
-      callbackURL: 'http://localhost:3010/login/naver',
+      clientID: process.env.NAVER_CLIENT_ID,
+      clientSecret: process.env.NAVER_CLIENT_SECRET,
+      callbackURL: process.env.NAVER_CALLBACK_URL,
       scope: ['email', 'name', 'birthyear', 'mobile'],
     });
   }

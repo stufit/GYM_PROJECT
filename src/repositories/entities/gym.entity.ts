@@ -7,19 +7,17 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { UserEntity } from './user.entity';
+import { UserEntityType } from '../../user/type/user-entity.type';
 
-@ObjectType('GYM_MASTER', { description: '사업장정보(GYM_MASTER)' })
 @Entity({ name: 'GYM_MASTER' })
 export class GymEntity {
-  @Field(() => Int, { nullable: false, description: '사업장 키' })
   @PrimaryGeneratedColumn({
     name: 'GYM_NO',
-    type: 'integer',
+    type: 'bigint',
     comment: '사업장 고유키',
   })
-  gymNo: number;
+  gymNo: string;
 
-  @Field(() => String, { nullable: true, description: '사업장명' })
   @Column({
     name: 'GYM_NM',
     type: 'varchar',
@@ -28,7 +26,6 @@ export class GymEntity {
   })
   gymNm: string;
 
-  @Field(() => String, { nullable: true, description: '사업장 주소' })
   @Column({
     name: 'ADDRESS',
     type: 'varchar',
@@ -37,7 +34,6 @@ export class GymEntity {
   })
   address: string;
 
-  @Field(() => String, { nullable: true, description: '시,군,구' })
   @Column({
     name: 'STATE',
     type: 'varchar',
@@ -46,7 +42,6 @@ export class GymEntity {
   })
   state: string;
 
-  @Field(() => String, { nullable: true, description: '도시명' })
   @Column({
     name: 'CITY',
     type: 'varchar',
@@ -55,7 +50,6 @@ export class GymEntity {
   })
   city: string;
 
-  @Field(() => String, { nullable: true, description: '우편번호' })
   @Column({
     name: 'ZIP_CODE',
     type: 'varchar',
@@ -64,7 +58,6 @@ export class GymEntity {
   })
   zipCode: string;
 
-  @Field(() => String, { nullable: true, description: '사업장 연락처' })
   @Column({
     name: 'GYM_PHONE_NUMBER',
     type: 'varchar',
@@ -73,7 +66,6 @@ export class GymEntity {
   })
   gymPhoneNumber: string;
 
-  @Field(() => String, { nullable: true, description: '사업장 이메일' })
   @Column({
     name: 'GYM_EMAIL',
     type: 'varchar',
@@ -82,7 +74,6 @@ export class GymEntity {
   })
   gymEmail: string;
 
-  @Field(() => String, { nullable: true, description: '사업장 웹사이트' })
   @Column({
     name: 'GYM_WEBSITE',
     type: 'varchar',
@@ -91,7 +82,6 @@ export class GymEntity {
   })
   gymWebsite: string;
 
-  @Field(() => String, { nullable: true, description: '사업장 운영시간' })
   @Column({
     name: 'GYM_OPERATING_TIME',
     type: 'varchar',
@@ -100,7 +90,6 @@ export class GymEntity {
   })
   gymOperatingTime: string;
 
-  @Field(() => String, { nullable: true, description: '사업장 시설' })
   @Column({
     name: 'FACILITIES',
     type: 'varchar',
@@ -109,7 +98,6 @@ export class GymEntity {
   })
   facilities: string;
 
-  @Field(() => String, { nullable: true, description: '사업장 규모' })
   @Column({
     name: 'GYM_SIZE',
     type: 'varchar',
@@ -118,7 +106,6 @@ export class GymEntity {
   })
   gymSize: string;
 
-  @Field(() => String, { nullable: true, description: '시설 이용 가격' })
   @Column({
     name: 'GYM_COST',
     type: 'varchar',
@@ -127,7 +114,6 @@ export class GymEntity {
   })
   gymCost: string;
 
-  @Field(() => String, { nullable: true, description: 'PT 서비스 유무' })
   @Column({
     name: 'PT_AVAILABLE',
     type: 'varchar',
@@ -137,7 +123,6 @@ export class GymEntity {
   })
   ptAvailable: string;
 
-  @Field(() => String, { nullable: true, description: 'PT 가격' })
   @Column({
     name: 'PT_COST',
     type: 'varchar',
@@ -146,7 +131,6 @@ export class GymEntity {
   })
   ptCost: string;
 
-  @Field(() => UserEntity)
   @ManyToOne(() => UserEntity, (user) => user.gyms)
   @JoinColumn({ name: 'USER_NO' })
   gymOwner: UserEntity;

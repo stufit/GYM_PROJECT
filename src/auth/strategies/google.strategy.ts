@@ -1,9 +1,9 @@
 import { PassportStrategy } from '@nestjs/passport';
 import { Profile, Strategy } from 'passport-google-oauth20';
 import { ConfigService } from '@nestjs/config';
-import { IOGoogleAuthUser } from '../../interface/social.interface';
 import { Injectable } from '@nestjs/common';
 import * as process from 'process';
+import { IOGoogleAuthUser } from '../../interface/social.interface';
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
   constructor(private readonly configService: ConfigService) {
@@ -19,7 +19,6 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     refreshToken: string,
     profile: Profile,
   ): IOGoogleAuthUser {
-    console.log('프로필:', profile);
     return {
       name: profile.displayName,
       email: profile.emails[0].value,

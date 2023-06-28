@@ -1,10 +1,7 @@
 import { Field, InputType } from '@nestjs/graphql';
-import {
-  UserLoginType,
-  UserRole,
-} from '../../repositories/entities/user.entity';
 import { IsEnum } from 'class-validator';
-@InputType('UserCreateInput')
+import { UserLoginType, UserRole } from '../../common/enums/user.enums';
+@InputType('USER_CREATE_INPUT')
 export class UserCreateInput {
   @Field(() => String, { nullable: true, description: '유저명' })
   name: string;

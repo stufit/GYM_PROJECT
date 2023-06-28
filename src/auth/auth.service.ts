@@ -3,9 +3,9 @@ import { LoginInput } from './input/login.input';
 import { LoginOutput } from './type/login.type';
 import { UserService } from '../user/user.service';
 import { UserCreateInput } from '../user/input/create.input';
-import { UserLoginType, UserRole } from '../repositories/entities/user.entity';
 import { UserRepository } from '../repositories/user.repository';
 import { JwtService } from '@nestjs/jwt';
+import { UserLoginType, UserRole } from '../common/enums/user.enums';
 
 @Injectable()
 export class AuthService {

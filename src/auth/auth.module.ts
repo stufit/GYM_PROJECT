@@ -8,6 +8,7 @@ import { GoogleStrategy } from './strategies/google.strategy';
 import { JwtAccessStrategy } from './strategies/jwt-access.strategy';
 import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
 import { NaverStrategy } from './strategies/naver.strategy';
+import { KakaoStrategy } from './strategies/kakao.strategy';
 
 @Module({
   imports: [JwtModule.register({}), UserModule],
@@ -18,6 +19,7 @@ import { NaverStrategy } from './strategies/naver.strategy';
     JwtAccessStrategy,
     JwtRefreshStrategy,
     NaverStrategy,
+    KakaoStrategy,
   ],
   controllers: [AuthController],
   exports: [AuthService],
