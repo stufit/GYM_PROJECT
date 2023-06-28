@@ -1,4 +1,3 @@
-import { Field, Int, ObjectType, registerEnumType } from '@nestjs/graphql';
 import {
   BeforeInsert,
   BeforeUpdate,
@@ -15,50 +14,29 @@ import { InternalServerErrorException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { GymEntity } from './gym.entity';
 import { Exclude } from 'class-transformer';
-
-export enum UserLoginType {
-  Local = 'LOCAL',
-  Google = 'GOOGLE',
-  Kakao = 'KAKAO',
-  Naver = 'NAVER',
-}
-export enum UserRole {
-  User = 'USER',
-  Admin = 'ADMIN',
-}
+import { UserLoginType, UserRole } from '../../common/enums/user.enums';
 
 // graphql용
-registerEnumType(UserLoginType, { name: 'UserEnrollType' });
-registerEnumType(UserRole, { name: 'UserRole' });
 
-@ObjectType('HEALTH_USER', { description: '헬스어플 유저' })
 @Entity({ name: 'USER' })
 export class UserEntity {
-  @Field(() => Int, { nullable: false, description: '유저키' })
   @PrimaryGeneratedColumn({ name: 'USER_NO' })
   userNo: number;
 
-  @Field(() => String, { nullable: true, description: '유저명' })
   @Column({ name: 'USER_NAME' })
   @Length(5, 10)
   name: string;
 
-  @Field(() => String, { nullable: true, description: '유저 아이디' })
   @Column({ name: 'USER_ID' })
   @Length(3, 15)
   userId: string;
 
   @Exclude()
-  @Field(() => String, { nullable: true, description: '비밀번호' })
   @Column({ name: 'PASSWORD' })
   @Length(5, 20)
   password: string;
 
   @IsEnum(UserRole)
-  @Field(() => UserRole, {
-    defaultValue: UserRole.User,
-    description: '유저 역할',
-  })
   @Column({
     name: 'ROLE',
     type: 'enum',
@@ -69,10 +47,6 @@ export class UserEntity {
   role: UserRole;
 
   @IsEnum(UserLoginType)
-  @Field(() => UserLoginType, {
-    defaultValue: UserLoginType.Local,
-    description: '유저 로그인 유형',
-  })
   @Column({
     name: 'LOGIN_TYPE',
     type: 'enum',
@@ -82,26 +56,18 @@ export class UserEntity {
   })
   loginType: UserLoginType;
 
-  @Field(() => String, { nullable: true, description: '유저 이메일' })
   @Column({ name: 'USER_EMAIL' })
   userEmail: string;
 
-  @Field(() => String, { nullable: false, description: '사용여부' })
   @Column({ name: 'USE_YN', default: 'Y' })
   useYn: string;
 
-  @Field(() => Date, { description: '생성일자' })
   @CreateDateColumn({ type: 'timestamp', name: 'CREATED_AT' })
   createdAt: Date;
 
-  @Field(() => Date, { description: '수정일자' })
   @UpdateDateColumn({ type: 'timestamp', name: 'UPDATED_AT' })
   updatedAt: Date;
 
-  @Field(() => String, { nullable: true, description: '테스트' })
-  test: string;
-
-  @Field(() => [GymEntity])
   @OneToMany(() => GymEntity, (gym) => gym.gymOwner)
   gyms: GymEntity[];
 

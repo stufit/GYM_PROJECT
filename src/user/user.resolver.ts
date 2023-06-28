@@ -6,6 +6,7 @@ import { CreateUserType } from './type/create.type';
 import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
 import { IContext } from '../common/interface/req.interface';
+import { UserEntityType } from './type/user-entity.type';
 
 @Resolver(() => UserEntity)
 export class UserResolver {
@@ -18,12 +19,12 @@ export class UserResolver {
   }
 
   // 1. 유저 리스트
-  @Query((returns) => UserEntity)
+  @Query((returns) => UserEntityType)
   async userList() {
     return;
   }
   // 2. 유저 상세정보
-  @Query(() => UserEntity)
+  @Query(() => UserEntityType)
   async userDetail(@Args('email') email: string) {
     const result = await this.userService.userCheckAsEmail(email);
     return result;
